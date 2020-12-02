@@ -73,10 +73,10 @@ jobs:
       - uses: jurijzahn8019/action-is-issue-on-board@v0.0.1
         id: checker
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           owner: ${{ github.repository_owner }}
           board: My Board
-          repo: some_repo-name
+          repo: ${{ github.event.repository.name }}
           number: ${{ github.event.issue.number }}
 
       - name: Do Something if issue is already on the board
