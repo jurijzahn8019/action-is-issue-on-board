@@ -1,7 +1,5 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', { value: true });
-
 var require$$0$1 = require('os');
 var fs_1 = require('fs');
 var require$$1$1 = require('path');
@@ -15589,7 +15587,7 @@ function withDefaults$2(request$1, newDefaults) {
     });
 }
 
-const graphql$1 = withDefaults$2(request, {
+withDefaults$2(request, {
     headers: {
         "user-agent": `octokit-graphql.js/${VERSION$2} ${getUserAgent()}`,
     },
@@ -17453,15 +17451,11 @@ function setup(env) {
 	createDebug.enable = enable;
 	createDebug.enabled = enabled;
 	createDebug.humanize = ms;
+	createDebug.destroy = destroy;
 
 	Object.keys(env).forEach(key => {
 		createDebug[key] = env[key];
 	});
-
-	/**
-	* Active `debug` instances.
-	*/
-	createDebug.instances = [];
 
 	/**
 	* The currently active debug mode names, and names to skip.
@@ -17504,6 +17498,7 @@ function setup(env) {
 	*/
 	function createDebug(namespace) {
 		let prevTime;
+		let enableOverride = null;
 
 		function debug(...args) {
 			// Disabled?
@@ -17533,7 +17528,7 @@ function setup(env) {
 			args[0] = args[0].replace(/%([a-zA-Z%])/g, (match, format) => {
 				// If we encounter an escaped % then don't increase the array index
 				if (match === '%%') {
-					return match;
+					return '%';
 				}
 				index++;
 				const formatter = createDebug.formatters[format];
@@ -17556,29 +17551,26 @@ function setup(env) {
 		}
 
 		debug.namespace = namespace;
-		debug.enabled = createDebug.enabled(namespace);
 		debug.useColors = createDebug.useColors();
 		debug.color = createDebug.selectColor(namespace);
-		debug.destroy = destroy;
 		debug.extend = extend;
+		debug.destroy = createDebug.destroy; // XXX Temporary. Will be removed in the next major release.
+
+		Object.defineProperty(debug, 'enabled', {
+			enumerable: true,
+			configurable: false,
+			get: () => enableOverride === null ? createDebug.enabled(namespace) : enableOverride,
+			set: v => {
+				enableOverride = v;
+			}
+		});
 
 		// Env-specific initialization logic for debug instances
 		if (typeof createDebug.init === 'function') {
 			createDebug.init(debug);
 		}
 
-		createDebug.instances.push(debug);
-
 		return debug;
-	}
-
-	function destroy() {
-		const index = createDebug.instances.indexOf(this);
-		if (index !== -1) {
-			createDebug.instances.splice(index, 1);
-			return true;
-		}
-		return false;
 	}
 
 	function extend(namespace, delimiter) {
@@ -17617,11 +17609,6 @@ function setup(env) {
 			} else {
 				createDebug.names.push(new RegExp('^' + namespaces + '$'));
 			}
-		}
-
-		for (i = 0; i < createDebug.instances.length; i++) {
-			const instance = createDebug.instances[i];
-			instance.enabled = createDebug.enabled(instance.namespace);
 		}
 	}
 
@@ -17697,6 +17684,14 @@ function setup(env) {
 		return val;
 	}
 
+	/**
+	* XXX DO NOT USE. This is a temporary stub function.
+	* XXX It WILL be removed in the next major release.
+	*/
+	function destroy() {
+		console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+	}
+
 	createDebug.enable(createDebug.load());
 
 	return createDebug;
@@ -17716,6 +17711,16 @@ exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
 exports.storage = localstorage();
+exports.destroy = (() => {
+	let warned = false;
+
+	return () => {
+		if (!warned) {
+			warned = true;
+			console.warn('Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.');
+		}
+	};
+})();
 
 /**
  * Colors.
@@ -18122,6 +18127,10 @@ exports.formatArgs = formatArgs;
 exports.save = save;
 exports.load = load;
 exports.useColors = useColors;
+exports.destroy = util__default['default'].deprecate(
+	() => {},
+	'Instance method `debug.destroy()` is deprecated and no longer does anything. It will be removed in the next major version of `debug`.'
+);
 
 /**
  * Colors.
@@ -18351,7 +18360,9 @@ const {formatters} = module.exports;
 formatters.o = function (v) {
 	this.inspectOpts.colors = this.useColors;
 	return util__default['default'].inspect(v, this.inspectOpts)
-		.replace(/\s*\n\s*/g, ' ');
+		.split('\n')
+		.map(str => str.trim())
+		.join(' ');
 };
 
 /**
@@ -18380,7 +18391,7 @@ if (typeof process === 'undefined' || process.type === 'renderer' || process.bro
 /* eslint-disable camelcase */
 const dbg = src("action-is-issue-on-board:index");
 async function run() {
-    var _a, _b;
+    var _a;
     dbg("Check whether issue is on the board");
     try {
         dbg("Retrieve inputs");
@@ -18421,7 +18432,7 @@ async function run() {
             core.setFailed(`Project Board ${board} was not found`);
             return;
         }
-        const found = project === null || project === void 0 ? void 0 : project.columns.nodes.find((col) => col.cards.nodes.find((crd) => {
+        const found = project.columns.nodes.find((col) => col.cards.nodes.find((crd) => {
             var _a;
             if (((_a = crd.content) === null || _a === void 0 ? void 0 : _a.number) === number) {
                 column = col;
@@ -18434,13 +18445,16 @@ async function run() {
         core.setOutput("boardId", project.name);
         core.setOutput("boardName", project.id);
         if (found) {
-            dbg("Issue %s is added to %s in %s", issue === null || issue === void 0 ? void 0 : issue.number, project === null || project === void 0 ? void 0 : project.name, (_b = data.repository) === null || _b === void 0 ? void 0 : _b.name);
-            core.info(`Issue: ${issue === null || issue === void 0 ? void 0 : issue.number} is on Board: ${project === null || project === void 0 ? void 0 : project.name}`);
+            const iss = issue;
+            const crd = card;
+            const col = column;
+            dbg("Issue %s is added to %s", iss.number, project.name);
+            core.info(`Issue: ${iss.number} is on Board: ${project.name}`);
             core.setOutput("isOnBoard", true);
-            core.setOutput("repo", issue === null || issue === void 0 ? void 0 : issue.repository.name);
-            core.setOutput("cardId", card === null || card === void 0 ? void 0 : card.id);
-            core.setOutput("columnId", column === null || column === void 0 ? void 0 : column.id);
-            core.setOutput("columnName", column === null || column === void 0 ? void 0 : column.name);
+            core.setOutput("repo", iss.repository.name);
+            core.setOutput("cardId", crd.id);
+            core.setOutput("columnId", col.id);
+            core.setOutput("columnName", col.name);
         }
         else {
             core.info(`Issue: ${number} is not on Board: ${board}`);
@@ -18456,7 +18470,7 @@ async function run() {
         core.setFailed(e.message);
     }
 }
+
 var index = run();
 
-exports.default = index;
-exports.run = run;
+module.exports = index;

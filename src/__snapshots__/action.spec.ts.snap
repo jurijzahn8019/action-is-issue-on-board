@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action Happy Path: Output 1`] = `
+Array [
+  "boardId: the-board",
+  "boardName: projectid",
+  "isOnBoard: true",
+  "repo: the-repo",
+  "cardId: blabla",
+  "columnId: colid",
+  "columnName: The Column",
+]
+`;
+
+exports[`action Should process not found: Output 1`] = `
+Array [
+  "boardId: the-board",
+  "boardName: projectid",
+  "isOnBoard: false",
+  "repo: ",
+  "cardId: ",
+  "columnId: ",
+  "columnName: ",
+]
+`;
+
+exports[`action Use Project from org: Output 1`] = `
+Array [
+  "boardId: the-board",
+  "boardName: projectid",
+  "isOnBoard: true",
+  "repo: the-repo",
+  "cardId: blabla",
+  "columnId: colid",
+  "columnName: The Column",
+]
+`;
