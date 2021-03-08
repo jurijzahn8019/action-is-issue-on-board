@@ -77,11 +77,11 @@ function toCommandValue(input) {
 var toCommandValue_1 = toCommandValue;
 
 
-var utils = /*#__PURE__*/Object.defineProperty({
+var utils$2 = /*#__PURE__*/Object.defineProperty({
 	toCommandValue: toCommandValue_1
 }, '__esModule', {value: true});
 
-var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
@@ -89,7 +89,7 @@ var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (
     return result;
 };
 
-const os = __importStar(require$$0__default['default']);
+const os$1 = __importStar$1(require$$0__default['default']);
 
 /**
  * Commands
@@ -101,13 +101,13 @@ const os = __importStar(require$$0__default['default']);
  *   ::warning::This is the message
  *   ::set-env name=MY_VAR::some value
  */
-function issueCommand(command, properties, message) {
+function issueCommand$1(command, properties, message) {
     const cmd = new Command(command, properties, message);
-    process.stdout.write(cmd.toString() + os.EOL);
+    process.stdout.write(cmd.toString() + os$1.EOL);
 }
-var issueCommand_1 = issueCommand;
+var issueCommand_1$1 = issueCommand$1;
 function issue(name, message = '') {
-    issueCommand(name, {}, message);
+    issueCommand$1(name, {}, message);
 }
 var issue_1 = issue;
 const CMD_STRING = '::';
@@ -145,13 +145,13 @@ class Command {
     }
 }
 function escapeData(s) {
-    return utils.toCommandValue(s)
+    return utils$2.toCommandValue(s)
         .replace(/%/g, '%25')
         .replace(/\r/g, '%0D')
         .replace(/\n/g, '%0A');
 }
 function escapeProperty(s) {
-    return utils.toCommandValue(s)
+    return utils$2.toCommandValue(s)
         .replace(/%/g, '%25')
         .replace(/\r/g, '%0D')
         .replace(/\n/g, '%0A')
@@ -161,12 +161,12 @@ function escapeProperty(s) {
 
 
 var command = /*#__PURE__*/Object.defineProperty({
-	issueCommand: issueCommand_1,
+	issueCommand: issueCommand_1$1,
 	issue: issue_1
 }, '__esModule', {value: true});
 
 // For internal use, subject to change.
-var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
+var __importStar = (commonjsGlobal && commonjsGlobal.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
     if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
@@ -176,10 +176,10 @@ var __importStar$1 = (commonjsGlobal && commonjsGlobal.__importStar) || function
 
 // We use any as a valid input type
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const fs = __importStar$1(fs_1__default['default']);
-const os$1 = __importStar$1(require$$0__default['default']);
+const fs = __importStar(fs_1__default['default']);
+const os = __importStar(require$$0__default['default']);
 
-function issueCommand$1(command, message) {
+function issueCommand(command, message) {
     const filePath = process.env[`GITHUB_${command}`];
     if (!filePath) {
         throw new Error(`Unable to find environment variable for file command ${command}`);
@@ -187,15 +187,15 @@ function issueCommand$1(command, message) {
     if (!fs.existsSync(filePath)) {
         throw new Error(`Missing file at path: ${filePath}`);
     }
-    fs.appendFileSync(filePath, `${utils.toCommandValue(message)}${os$1.EOL}`, {
+    fs.appendFileSync(filePath, `${utils$2.toCommandValue(message)}${os.EOL}`, {
         encoding: 'utf8'
     });
 }
-var issueCommand_1$1 = issueCommand$1;
+var issueCommand_1 = issueCommand;
 
 
 var fileCommand = /*#__PURE__*/Object.defineProperty({
-	issueCommand: issueCommand_1$1
+	issueCommand: issueCommand_1
 }, '__esModule', {value: true});
 
 var core = createCommonjsModule(function (module, exports) {
@@ -245,7 +245,7 @@ var ExitCode;
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function exportVariable(name, val) {
-    const convertedVal = utils.toCommandValue(val);
+    const convertedVal = utils$2.toCommandValue(val);
     process.env[name] = convertedVal;
     const filePath = process.env['GITHUB_ENV'] || '';
     if (filePath) {
@@ -805,7 +805,7 @@ if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
 }
 var debug_1 = debug; // for test
 
-var tunnel = {
+var tunnel$1 = {
 	httpOverHttp: httpOverHttp_1,
 	httpsOverHttp: httpsOverHttp_1,
 	httpOverHttps: httpOverHttps_1,
@@ -813,14 +813,14 @@ var tunnel = {
 	debug: debug_1
 };
 
-var tunnel$1 = tunnel;
+var tunnel = tunnel$1;
 
 var httpClient = createCommonjsModule(function (module, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 
 
 
-let tunnel;
+let tunnel$1;
 var HttpCodes;
 (function (HttpCodes) {
     HttpCodes[HttpCodes["OK"] = 200] = "OK";
@@ -1237,8 +1237,8 @@ class HttpClient {
         }
         if (useProxy) {
             // If using proxy, need tunnel
-            if (!tunnel) {
-                tunnel = tunnel$1;
+            if (!tunnel$1) {
+                tunnel$1 = tunnel;
             }
             const agentOptions = {
                 maxSockets: maxSockets,
@@ -1252,10 +1252,10 @@ class HttpClient {
             let tunnelAgent;
             const overHttps = proxyUrl.protocol === 'https:';
             if (usingSsl) {
-                tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;
+                tunnelAgent = overHttps ? tunnel$1.httpsOverHttps : tunnel$1.httpsOverHttp;
             }
             else {
-                tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp;
+                tunnelAgent = overHttps ? tunnel$1.httpOverHttps : tunnel$1.httpOverHttp;
             }
             agent = tunnelAgent(agentOptions);
             this._proxyAgent = agent;
@@ -1854,7 +1854,7 @@ function expand(template, context) {
     });
 }
 
-function parse(options) {
+function parse$1(options) {
     // https://fetch.spec.whatwg.org/#methods
     let method = options.method.toUpperCase();
     // replace :varname with {varname} to make it RFC 6570 compatible
@@ -1933,23 +1933,23 @@ function parse(options) {
 }
 
 function endpointWithDefaults(defaults, route, options) {
-    return parse(merge(defaults, route, options));
+    return parse$1(merge(defaults, route, options));
 }
 
-function withDefaults(oldDefaults, newDefaults) {
+function withDefaults$2(oldDefaults, newDefaults) {
     const DEFAULTS = merge(oldDefaults, newDefaults);
     const endpoint = endpointWithDefaults.bind(null, DEFAULTS);
     return Object.assign(endpoint, {
         DEFAULTS,
-        defaults: withDefaults.bind(null, DEFAULTS),
+        defaults: withDefaults$2.bind(null, DEFAULTS),
         merge: merge.bind(null, DEFAULTS),
-        parse,
+        parse: parse$1,
     });
 }
 
-const VERSION = "6.0.9";
+const VERSION$5 = "6.0.9";
 
-const userAgent = `octokit-endpoint.js/${VERSION} ${getUserAgent()}`;
+const userAgent = `octokit-endpoint.js/${VERSION$5} ${getUserAgent()}`;
 // DEFAULTS has all properties set that EndpointOptions has, except url.
 // So we use RequestParameters and add method as additional required property.
 const DEFAULTS = {
@@ -1965,12 +1965,12 @@ const DEFAULTS = {
     },
 };
 
-const endpoint = withDefaults(null, DEFAULTS);
+const endpoint = withDefaults$2(null, DEFAULTS);
 
 /* eslint-disable node/no-deprecated-api */
 
 
-var Buffer$1 = buffer__default['default'].Buffer;
+var Buffer$9 = buffer__default['default'].Buffer;
 
 var safer = {};
 
@@ -1983,13 +1983,13 @@ for (key in buffer__default['default']) {
 }
 
 var Safer = safer.Buffer = {};
-for (key in Buffer$1) {
-  if (!Buffer$1.hasOwnProperty(key)) continue
+for (key in Buffer$9) {
+  if (!Buffer$9.hasOwnProperty(key)) continue
   if (key === 'allocUnsafe' || key === 'allocUnsafeSlow') continue
-  Safer[key] = Buffer$1[key];
+  Safer[key] = Buffer$9[key];
 }
 
-safer.Buffer.prototype = Buffer$1.prototype;
+safer.Buffer.prototype = Buffer$9.prototype;
 
 if (!Safer.from || Safer.from === Uint8Array.from) {
   Safer.from = function (value, encodingOrOffset, length) {
@@ -1999,7 +1999,7 @@ if (!Safer.from || Safer.from === Uint8Array.from) {
     if (value && typeof value.length === 'undefined') {
       throw new TypeError('The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type ' + typeof value)
     }
-    return Buffer$1(value, encodingOrOffset, length)
+    return Buffer$9(value, encodingOrOffset, length)
   };
 }
 
@@ -2011,7 +2011,7 @@ if (!Safer.alloc) {
     if (size < 0 || size >= 2 * (1 << 30)) {
       throw new RangeError('The value "' + size + '" is invalid for option "size"')
     }
-    var buf = Buffer$1(size);
+    var buf = Buffer$9(size);
     if (!fill || fill.length === 0) {
       buf.fill(0);
     } else if (typeof encoding === 'string') {
@@ -2165,10 +2165,10 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 
 /*<replacement>*/
 
-var Buffer$2 = safeBuffer.Buffer;
+var Buffer$8 = safeBuffer.Buffer;
 /*</replacement>*/
 
-var isEncoding = Buffer$2.isEncoding || function (encoding) {
+var isEncoding = Buffer$8.isEncoding || function (encoding) {
   encoding = '' + encoding;
   switch (encoding && encoding.toLowerCase()) {
     case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
@@ -2209,15 +2209,15 @@ function _normalizeEncoding(enc) {
 // modules monkey-patch it to support additional encodings
 function normalizeEncoding(enc) {
   var nenc = _normalizeEncoding(enc);
-  if (typeof nenc !== 'string' && (Buffer$2.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+  if (typeof nenc !== 'string' && (Buffer$8.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
   return nenc || enc;
 }
 
 // StringDecoder provides an interface for efficiently splitting a series of
 // buffers into a series of JS strings without breaking apart multi-byte
 // characters.
-var StringDecoder_1 = StringDecoder;
-function StringDecoder(encoding) {
+var StringDecoder_1 = StringDecoder$1;
+function StringDecoder$1(encoding) {
   this.encoding = normalizeEncoding(encoding);
   var nb;
   switch (this.encoding) {
@@ -2242,10 +2242,10 @@ function StringDecoder(encoding) {
   }
   this.lastNeed = 0;
   this.lastTotal = 0;
-  this.lastChar = Buffer$2.allocUnsafe(nb);
+  this.lastChar = Buffer$8.allocUnsafe(nb);
 }
 
-StringDecoder.prototype.write = function (buf) {
+StringDecoder$1.prototype.write = function (buf) {
   if (buf.length === 0) return '';
   var r;
   var i;
@@ -2261,13 +2261,13 @@ StringDecoder.prototype.write = function (buf) {
   return r || '';
 };
 
-StringDecoder.prototype.end = utf8End;
+StringDecoder$1.prototype.end = utf8End;
 
 // Returns only complete characters in a Buffer
-StringDecoder.prototype.text = utf8Text;
+StringDecoder$1.prototype.text = utf8Text;
 
 // Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
-StringDecoder.prototype.fillLast = function (buf) {
+StringDecoder$1.prototype.fillLast = function (buf) {
   if (this.lastNeed <= buf.length) {
     buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
     return this.lastChar.toString(this.encoding, 0, this.lastTotal);
@@ -2440,7 +2440,7 @@ var string_decoder = {
 	StringDecoder: StringDecoder_1
 };
 
-var Buffer$3 = safer_1.Buffer;
+var Buffer$7 = safer_1.Buffer;
 
 // Export Node.js internal encodings.
 
@@ -2474,7 +2474,7 @@ function InternalCodec(codecOptions, iconv) {
         this.encoder = InternalEncoderCesu8;
 
         // Add decoder for versions of Node not supporting CESU-8
-        if (Buffer$3.from('eda0bdedb2a9', 'hex').toString() !== '💩') {
+        if (Buffer$7.from('eda0bdedb2a9', 'hex').toString() !== '💩') {
             this.decoder = InternalDecoderCesu8;
             this.defaultCharUnicode = iconv.defaultCharUnicode;
         }
@@ -2487,19 +2487,19 @@ InternalCodec.prototype.decoder = InternalDecoder;
 //------------------------------------------------------------------------------
 
 // We use node.js internal decoder. Its signature is the same as ours.
-var StringDecoder$1 = string_decoder.StringDecoder;
+var StringDecoder = string_decoder.StringDecoder;
 
-if (!StringDecoder$1.prototype.end) // Node v0.8 doesn't have this method.
-    StringDecoder$1.prototype.end = function() {};
+if (!StringDecoder.prototype.end) // Node v0.8 doesn't have this method.
+    StringDecoder.prototype.end = function() {};
 
 
 function InternalDecoder(options, codec) {
-    this.decoder = new StringDecoder$1(codec.enc);
+    this.decoder = new StringDecoder(codec.enc);
 }
 
 InternalDecoder.prototype.write = function(buf) {
-    if (!Buffer$3.isBuffer(buf)) {
-        buf = Buffer$3.from(buf);
+    if (!Buffer$7.isBuffer(buf)) {
+        buf = Buffer$7.from(buf);
     }
 
     return this.decoder.write(buf);
@@ -2518,7 +2518,7 @@ function InternalEncoder(options, codec) {
 }
 
 InternalEncoder.prototype.write = function(str) {
-    return Buffer$3.from(str, this.enc);
+    return Buffer$7.from(str, this.enc);
 };
 
 InternalEncoder.prototype.end = function() {
@@ -2538,11 +2538,11 @@ InternalEncoderBase64.prototype.write = function(str) {
     this.prevStr = str.slice(completeQuads);
     str = str.slice(0, completeQuads);
 
-    return Buffer$3.from(str, "base64");
+    return Buffer$7.from(str, "base64");
 };
 
 InternalEncoderBase64.prototype.end = function() {
-    return Buffer$3.from(this.prevStr, "base64");
+    return Buffer$7.from(this.prevStr, "base64");
 };
 
 
@@ -2553,7 +2553,7 @@ function InternalEncoderCesu8(options, codec) {
 }
 
 InternalEncoderCesu8.prototype.write = function(str) {
-    var buf = Buffer$3.alloc(str.length * 3), bufIdx = 0;
+    var buf = Buffer$7.alloc(str.length * 3), bufIdx = 0;
     for (var i = 0; i < str.length; i++) {
         var charCode = str.charCodeAt(i);
         // Naive implementation, but it works because CESU-8 is especially easy
@@ -2638,7 +2638,7 @@ InternalDecoderCesu8.prototype.end = function() {
     return res;
 };
 
-var Buffer$4 = safer_1.Buffer;
+var Buffer$6 = safer_1.Buffer;
 
 // == UTF32-LE/BE codec. ==========================================================
 
@@ -2668,8 +2668,8 @@ function Utf32Encoder(options, codec) {
 }
 
 Utf32Encoder.prototype.write = function(str) {
-    var src = Buffer$4.from(str, 'ucs2');
-    var dst = Buffer$4.alloc(src.length * 2);
+    var src = Buffer$6.from(str, 'ucs2');
+    var dst = Buffer$6.alloc(src.length * 2);
     var write32 = this.isLE ? dst.writeUInt32LE : dst.writeUInt32BE;
     var offset = 0;
 
@@ -2721,7 +2721,7 @@ Utf32Encoder.prototype.end = function() {
     if (!this.highSurrogate)
         return;
 
-    var buf = Buffer$4.alloc(4);
+    var buf = Buffer$6.alloc(4);
 
     if (this.isLE)
         buf.writeUInt32LE(this.highSurrogate, 0);
@@ -2747,7 +2747,7 @@ Utf32Decoder.prototype.write = function(src) {
 
     var i = 0;
     var codepoint = 0;
-    var dst = Buffer$4.alloc(src.length + 4);
+    var dst = Buffer$6.alloc(src.length + 4);
     var offset = 0;
     var isLE = this.isLE;
     var overflow = this.overflow;
@@ -2875,7 +2875,7 @@ Utf32AutoDecoder.prototype.write = function(buf) {
             return '';
 
         // We have enough bytes -> detect endianness.
-        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+        var encoding = detectEncoding$1(this.initialBufs, this.options.defaultEncoding);
         this.decoder = this.iconv.getDecoder(encoding, this.options);
 
         var resStr = '';
@@ -2891,7 +2891,7 @@ Utf32AutoDecoder.prototype.write = function(buf) {
 
 Utf32AutoDecoder.prototype.end = function() {
     if (!this.decoder) {
-        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
+        var encoding = detectEncoding$1(this.initialBufs, this.options.defaultEncoding);
         this.decoder = this.iconv.getDecoder(encoding, this.options);
 
         var resStr = '';
@@ -2909,7 +2909,7 @@ Utf32AutoDecoder.prototype.end = function() {
     return this.decoder.end();
 };
 
-function detectEncoding(bufs, defaultEncoding) {
+function detectEncoding$1(bufs, defaultEncoding) {
     var b = [];
     var charsProcessed = 0;
     var invalidLE = 0, invalidBE = 0;   // Number of invalid chars when decoded as LE or BE.
@@ -3087,7 +3087,7 @@ Utf16Decoder.prototype.write = function(buf) {
             return '';
 
         // We have enough bytes -> detect endianness.
-        var encoding = detectEncoding$1(this.initialBufs, this.options.defaultEncoding);
+        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
         this.decoder = this.iconv.getDecoder(encoding, this.options);
 
         var resStr = '';
@@ -3103,7 +3103,7 @@ Utf16Decoder.prototype.write = function(buf) {
 
 Utf16Decoder.prototype.end = function() {
     if (!this.decoder) {
-        var encoding = detectEncoding$1(this.initialBufs, this.options.defaultEncoding);
+        var encoding = detectEncoding(this.initialBufs, this.options.defaultEncoding);
         this.decoder = this.iconv.getDecoder(encoding, this.options);
 
         var resStr = '';
@@ -3120,7 +3120,7 @@ Utf16Decoder.prototype.end = function() {
     return this.decoder.end();
 };
 
-function detectEncoding$1(bufs, defaultEncoding) {
+function detectEncoding(bufs, defaultEncoding) {
     var b = [];
     var charsProcessed = 0;
     var asciiCharsLE = 0, asciiCharsBE = 0; // Number of ASCII chars when decoded as LE or BE.
@@ -3165,7 +3165,7 @@ var utf16 = {
 	utf16: utf16_1
 };
 
-var Buffer$6 = safer_1.Buffer;
+var Buffer$4 = safer_1.Buffer;
 
 // UTF-7 codec, according to https://tools.ietf.org/html/rfc2152
 // See also below a UTF-7-IMAP codec, according to http://tools.ietf.org/html/rfc3501#section-5.1.3
@@ -3191,7 +3191,7 @@ function Utf7Encoder(options, codec) {
 Utf7Encoder.prototype.write = function(str) {
     // Naive implementation.
     // Non-direct chars are encoded as "+<base64>-"; single "+" char is encoded as "+-".
-    return Buffer$6.from(str.replace(nonDirectChars, function(chunk) {
+    return Buffer$4.from(str.replace(nonDirectChars, function(chunk) {
         return "+" + (chunk === '+' ? '' : 
             this.iconv.encode(chunk, 'utf16-be').toString('base64').replace(/=+$/, '')) 
             + "-";
@@ -3212,8 +3212,8 @@ function Utf7Decoder(options, codec) {
 
 var base64Regex = /[A-Za-z0-9\/+]/;
 var base64Chars = [];
-for (var i = 0; i < 256; i++)
-    base64Chars[i] = base64Regex.test(String.fromCharCode(i));
+for (var i$1 = 0; i$1 < 256; i$1++)
+    base64Chars[i$1] = base64Regex.test(String.fromCharCode(i$1));
 
 var plusChar = '+'.charCodeAt(0), 
     minusChar = '-'.charCodeAt(0),
@@ -3240,7 +3240,7 @@ Utf7Decoder.prototype.write = function(buf) {
                     res += "+";
                 } else {
                     var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii");
-                    res += this.iconv.decode(Buffer$6.from(b64str, 'base64'), "utf16-be");
+                    res += this.iconv.decode(Buffer$4.from(b64str, 'base64'), "utf16-be");
                 }
 
                 if (buf[i] != minusChar) // Minus is absorbed after base64.
@@ -3262,7 +3262,7 @@ Utf7Decoder.prototype.write = function(buf) {
         base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
         b64str = b64str.slice(0, canBeDecoded);
 
-        res += this.iconv.decode(Buffer$6.from(b64str, 'base64'), "utf16-be");
+        res += this.iconv.decode(Buffer$4.from(b64str, 'base64'), "utf16-be");
     }
 
     this.inBase64 = inBase64;
@@ -3274,7 +3274,7 @@ Utf7Decoder.prototype.write = function(buf) {
 Utf7Decoder.prototype.end = function() {
     var res = "";
     if (this.inBase64 && this.base64Accum.length > 0)
-        res = this.iconv.decode(Buffer$6.from(this.base64Accum, 'base64'), "utf16-be");
+        res = this.iconv.decode(Buffer$4.from(this.base64Accum, 'base64'), "utf16-be");
 
     this.inBase64 = false;
     this.base64Accum = '';
@@ -3308,7 +3308,7 @@ Utf7IMAPCodec.prototype.bomAware = true;
 function Utf7IMAPEncoder(options, codec) {
     this.iconv = codec.iconv;
     this.inBase64 = false;
-    this.base64Accum = Buffer$6.alloc(6);
+    this.base64Accum = Buffer$4.alloc(6);
     this.base64AccumIdx = 0;
 }
 
@@ -3316,7 +3316,7 @@ Utf7IMAPEncoder.prototype.write = function(str) {
     var inBase64 = this.inBase64,
         base64Accum = this.base64Accum,
         base64AccumIdx = this.base64AccumIdx,
-        buf = Buffer$6.alloc(str.length*5 + 10), bufIdx = 0;
+        buf = Buffer$4.alloc(str.length*5 + 10), bufIdx = 0;
 
     for (var i = 0; i < str.length; i++) {
         var uChar = str.charCodeAt(i);
@@ -3362,7 +3362,7 @@ Utf7IMAPEncoder.prototype.write = function(str) {
 };
 
 Utf7IMAPEncoder.prototype.end = function() {
-    var buf = Buffer$6.alloc(10), bufIdx = 0;
+    var buf = Buffer$4.alloc(10), bufIdx = 0;
     if (this.inBase64) {
         if (this.base64AccumIdx > 0) {
             bufIdx += buf.write(this.base64Accum.slice(0, this.base64AccumIdx).toString('base64').replace(/\//g, ',').replace(/=+$/, ''), bufIdx);
@@ -3410,7 +3410,7 @@ Utf7IMAPDecoder.prototype.write = function(buf) {
                     res += "&";
                 } else {
                     var b64str = base64Accum + this.iconv.decode(buf.slice(lastI, i), "ascii").replace(/,/g, '/');
-                    res += this.iconv.decode(Buffer$6.from(b64str, 'base64'), "utf16-be");
+                    res += this.iconv.decode(Buffer$4.from(b64str, 'base64'), "utf16-be");
                 }
 
                 if (buf[i] != minusChar) // Minus may be absorbed after base64.
@@ -3432,7 +3432,7 @@ Utf7IMAPDecoder.prototype.write = function(buf) {
         base64Accum = b64str.slice(canBeDecoded); // The rest will be decoded in future.
         b64str = b64str.slice(0, canBeDecoded);
 
-        res += this.iconv.decode(Buffer$6.from(b64str, 'base64'), "utf16-be");
+        res += this.iconv.decode(Buffer$4.from(b64str, 'base64'), "utf16-be");
     }
 
     this.inBase64 = inBase64;
@@ -3444,7 +3444,7 @@ Utf7IMAPDecoder.prototype.write = function(buf) {
 Utf7IMAPDecoder.prototype.end = function() {
     var res = "";
     if (this.inBase64 && this.base64Accum.length > 0)
-        res = this.iconv.decode(Buffer$6.from(this.base64Accum, 'base64'), "utf16-be");
+        res = this.iconv.decode(Buffer$4.from(this.base64Accum, 'base64'), "utf16-be");
 
     this.inBase64 = false;
     this.base64Accum = '';
@@ -3457,7 +3457,7 @@ var utf7 = {
 	utf7imap: utf7imap
 };
 
-var Buffer$7 = safer_1.Buffer;
+var Buffer$3 = safer_1.Buffer;
 
 // Single-byte codec. Needs a 'chars' string parameter that contains 256 or 128 chars that
 // correspond to encoded bytes (if 128 - then lower half is ASCII). 
@@ -3478,10 +3478,10 @@ function SBCSCodec(codecOptions, iconv) {
         codecOptions.chars = asciiString + codecOptions.chars;
     }
 
-    this.decodeBuf = Buffer$7.from(codecOptions.chars, 'ucs2');
+    this.decodeBuf = Buffer$3.from(codecOptions.chars, 'ucs2');
     
     // Encoding buffer.
-    var encodeBuf = Buffer$7.alloc(65536, iconv.defaultCharSingleByte.charCodeAt(0));
+    var encodeBuf = Buffer$3.alloc(65536, iconv.defaultCharSingleByte.charCodeAt(0));
 
     for (var i = 0; i < codecOptions.chars.length; i++)
         encodeBuf[codecOptions.chars.charCodeAt(i)] = i;
@@ -3498,7 +3498,7 @@ function SBCSEncoder(options, codec) {
 }
 
 SBCSEncoder.prototype.write = function(str) {
-    var buf = Buffer$7.alloc(str.length);
+    var buf = Buffer$3.alloc(str.length);
     for (var i = 0; i < str.length; i++)
         buf[i] = this.encodeBuf[str.charCodeAt(i)];
     
@@ -3516,7 +3516,7 @@ function SBCSDecoder(options, codec) {
 SBCSDecoder.prototype.write = function(buf) {
     // Strings are immutable in JS -> we use ucs2 buffer to speed up computations.
     var decodeBuf = this.decodeBuf;
-    var newBuf = Buffer$7.alloc(buf.length*2);
+    var newBuf = Buffer$3.alloc(buf.length*2);
     var idx1 = 0, idx2 = 0;
     for (var i = 0; i < buf.length; i++) {
         idx1 = buf[i]*2; idx2 = i*2;
@@ -4160,7 +4160,7 @@ var sbcsDataGenerated = {
   }
 };
 
-var Buffer$8 = safer_1.Buffer;
+var Buffer$2 = safer_1.Buffer;
 
 // Multibyte codec. In this scheme, a character is represented by 1 or more bytes.
 // Our codec supports UTF-16 surrogates, extensions for GB18030 and unicode sequences.
@@ -4175,8 +4175,8 @@ var UNASSIGNED = -1,
     UNASSIGNED_NODE = new Array(0x100),
     DEF_CHAR = -1;
 
-for (var i$1 = 0; i$1 < 0x100; i$1++)
-    UNASSIGNED_NODE[i$1] = UNASSIGNED;
+for (var i = 0; i < 0x100; i++)
+    UNASSIGNED_NODE[i] = UNASSIGNED;
 
 
 // Class DBCSCodec reads and initializes mapping tables.
@@ -4473,7 +4473,7 @@ function DBCSEncoder(options, codec) {
 }
 
 DBCSEncoder.prototype.write = function(str) {
-    var newBuf = Buffer$8.alloc(str.length * (this.gb18030 ? 4 : 3)),
+    var newBuf = Buffer$2.alloc(str.length * (this.gb18030 ? 4 : 3)),
         leadSurrogate = this.leadSurrogate,
         seqObj = this.seqObj, nextChar = -1,
         i = 0, j = 0;
@@ -4596,7 +4596,7 @@ DBCSEncoder.prototype.end = function() {
     if (this.leadSurrogate === -1 && this.seqObj === undefined)
         return; // All clean. Most often case.
 
-    var newBuf = Buffer$8.alloc(10), j = 0;
+    var newBuf = Buffer$2.alloc(10), j = 0;
 
     if (this.seqObj) { // We're in the sequence.
         var dbcsCode = this.seqObj[DEF_CHAR];
@@ -4640,7 +4640,7 @@ function DBCSDecoder(options, codec) {
 }
 
 DBCSDecoder.prototype.write = function(buf) {
-    var newBuf = Buffer$8.alloc(buf.length*2),
+    var newBuf = Buffer$2.alloc(buf.length*2),
         nodeIdx = this.nodeIdx, 
         prevBytes = this.prevBytes, prevOffset = this.prevBytes.length,
         seqStart = -this.prevBytes.length, // idx of the start of current parsed sequence.
@@ -13237,7 +13237,7 @@ for (var i = 0; i < modules.length; i++) {
 }
 });
 
-var Buffer$9 = safer_1.Buffer;
+var Buffer$1 = safer_1.Buffer;
 
 // NOTE: Due to 'stream' module being pretty large (~100Kb, significant in browser environments), 
 // we opt to dependency-inject it instead of creating a hard dependency.
@@ -13286,7 +13286,7 @@ var streams = function(stream_module) {
         this.on('error', cb);
         this.on('data', function(chunk) { chunks.push(chunk); });
         this.on('end', function() {
-            cb(null, Buffer$9.concat(chunks));
+            cb(null, Buffer$1.concat(chunks));
         });
         return this;
     };
@@ -13306,7 +13306,7 @@ var streams = function(stream_module) {
     });
 
     IconvLiteDecoderStream.prototype._transform = function(chunk, encoding, done) {
-        if (!Buffer$9.isBuffer(chunk) && !(chunk instanceof Uint8Array))
+        if (!Buffer$1.isBuffer(chunk) && !(chunk instanceof Uint8Array))
             return done(new Error("Iconv decoding stream needs buffers as its input."));
         try {
             var res = this.conv.write(chunk);
@@ -13345,7 +13345,7 @@ var streams = function(stream_module) {
     };
 };
 
-var lib = createCommonjsModule(function (module) {
+var lib$1 = createCommonjsModule(function (module) {
 
 var Buffer = safer_1.Buffer;
 
@@ -13576,11 +13576,11 @@ function convert(str, to, from) {
  */
 function convertIconvLite(str, to, from) {
     if (to === 'UTF-8') {
-        return lib.decode(str, from);
+        return lib$1.decode(str, from);
     } else if (from === 'UTF-8') {
-        return lib.encode(str, to);
+        return lib$1.encode(str, to);
     } else {
-        return lib.encode(lib.decode(str, from), to);
+        return lib$1.encode(lib$1.decode(str, from), to);
     }
 }
 
@@ -13606,7 +13606,7 @@ var encoding = {
 	convert: convert_1
 };
 
-var lib$1 = createCommonjsModule(function (module, exports) {
+var lib = createCommonjsModule(function (module, exports) {
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
@@ -15257,7 +15257,7 @@ exports.Response = Response;
 exports.FetchError = FetchError;
 });
 
-var nodeFetch = /*@__PURE__*/getDefaultExportFromCjs(lib$1);
+var nodeFetch = /*@__PURE__*/getDefaultExportFromCjs(lib);
 
 class Deprecation extends Error {
   constructor(message) {
@@ -15390,7 +15390,7 @@ class RequestError extends Error {
     }
 }
 
-const VERSION$1 = "5.4.10";
+const VERSION$4 = "5.4.10";
 
 function getBufferResponse(response) {
     return response.arrayBuffer();
@@ -15510,11 +15510,11 @@ function withDefaults$1(oldEndpoint, newDefaults) {
 
 const request = withDefaults$1(endpoint, {
     headers: {
-        "user-agent": `octokit-request.js/${VERSION$1} ${getUserAgent()}`,
+        "user-agent": `octokit-request.js/${VERSION$4} ${getUserAgent()}`,
     },
 });
 
-const VERSION$2 = "4.5.7";
+const VERSION$3 = "4.5.7";
 
 class GraphqlError extends Error {
     constructor(request, response) {
@@ -15579,26 +15579,26 @@ function graphql(request, query, options) {
     });
 }
 
-function withDefaults$2(request$1, newDefaults) {
+function withDefaults(request$1, newDefaults) {
     const newRequest = request$1.defaults(newDefaults);
     const newApi = (query, options) => {
         return graphql(newRequest, query, options);
     };
     return Object.assign(newApi, {
-        defaults: withDefaults$2.bind(null, newRequest),
+        defaults: withDefaults.bind(null, newRequest),
         endpoint: request.endpoint,
     });
 }
 
-withDefaults$2(request, {
+withDefaults(request, {
     headers: {
-        "user-agent": `octokit-graphql.js/${VERSION$2} ${getUserAgent()}`,
+        "user-agent": `octokit-graphql.js/${VERSION$3} ${getUserAgent()}`,
     },
     method: "POST",
     url: "/graphql",
 });
 function withCustomRequest(customRequest) {
-    return withDefaults$2(customRequest, {
+    return withDefaults(customRequest, {
         method: "POST",
         url: "/graphql",
     });
@@ -15648,7 +15648,7 @@ const createTokenAuth = function createTokenAuth(token) {
     });
 };
 
-const VERSION$3 = "3.2.1";
+const VERSION$2 = "3.2.1";
 
 class Octokit {
     constructor(options = {}) {
@@ -15667,7 +15667,7 @@ class Octokit {
         // prepend default user agent with `options.userAgent` if set
         requestDefaults.headers["user-agent"] = [
             options.userAgent,
-            `octokit-core.js/${VERSION$3} ${getUserAgent()}`,
+            `octokit-core.js/${VERSION$2} ${getUserAgent()}`,
         ]
             .filter(Boolean)
             .join(" ");
@@ -15766,10 +15766,10 @@ class Octokit {
         return NewOctokit;
     }
 }
-Octokit.VERSION = VERSION$3;
+Octokit.VERSION = VERSION$2;
 Octokit.plugins = [];
 
-var distWeb = /*#__PURE__*/Object.freeze({
+var distWeb$2 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	Octokit: Octokit
 });
@@ -16980,7 +16980,7 @@ const Endpoints = {
     },
 };
 
-const VERSION$4 = "4.2.1";
+const VERSION$1 = "4.2.1";
 
 function endpointsToMethods(octokit, endpointsMap) {
     const newMethods = {};
@@ -17056,14 +17056,14 @@ function decorate(octokit, scope, methodName, defaults, decorations) {
 function restEndpointMethods(octokit) {
     return endpointsToMethods(octokit, Endpoints);
 }
-restEndpointMethods.VERSION = VERSION$4;
+restEndpointMethods.VERSION = VERSION$1;
 
 var distWeb$1 = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	restEndpointMethods: restEndpointMethods
 });
 
-const VERSION$5 = "2.6.0";
+const VERSION = "2.6.0";
 
 /**
  * Some “list” response that can be paginated have a different response structure
@@ -17170,21 +17170,21 @@ function paginateRest(octokit) {
         }),
     };
 }
-paginateRest.VERSION = VERSION$5;
+paginateRest.VERSION = VERSION;
 
-var distWeb$2 = /*#__PURE__*/Object.freeze({
+var distWeb = /*#__PURE__*/Object.freeze({
 	__proto__: null,
 	composePaginateRest: composePaginateRest,
 	paginateRest: paginateRest
 });
 
-var core_1 = /*@__PURE__*/getAugmentedNamespace(distWeb);
+var core_1 = /*@__PURE__*/getAugmentedNamespace(distWeb$2);
 
 var plugin_rest_endpoint_methods_1 = /*@__PURE__*/getAugmentedNamespace(distWeb$1);
 
-var plugin_paginate_rest_1 = /*@__PURE__*/getAugmentedNamespace(distWeb$2);
+var plugin_paginate_rest_1 = /*@__PURE__*/getAugmentedNamespace(distWeb);
 
-var utils$2 = createCommonjsModule(function (module, exports) {
+var utils = createCommonjsModule(function (module, exports) {
 var __createBinding = (commonjsGlobal && commonjsGlobal.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -17272,7 +17272,7 @@ exports.context = new Context.Context();
  * @param     options  other options to set
  */
 function getOctokit(token, options) {
-    return new utils$2.GitHub(utils$2.getOctokitOptions(token, options));
+    return new utils.GitHub(utils.getOctokitOptions(token, options));
 }
 exports.getOctokit = getOctokit;
 
@@ -17306,7 +17306,7 @@ var ms = function(val, options) {
   options = options || {};
   var type = typeof val;
   if (type === 'string' && val.length > 0) {
-    return parse$1(val);
+    return parse(val);
   } else if (type === 'number' && isFinite(val)) {
     return options.long ? fmtLong(val) : fmtShort(val);
   }
@@ -17324,7 +17324,7 @@ var ms = function(val, options) {
  * @api private
  */
 
-function parse$1(str) {
+function parse(str) {
   str = String(str);
   if (str.length > 100) {
     return;
