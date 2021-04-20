@@ -12,6 +12,7 @@
     "build:pkg": "cpy package*.json dist && npm ci --production --prefix dist",
     "clean": "rm -rf ./dist ./tmp",
     "lint": "eslint --fix src/**/*.ts",
+    "prepare": "husky install",
     "precommit": "npm run lint && npm run build && git add dist/*",
     "prerel": "standard-version --skip.changelog -p $(git branch --show-current | sed 's/main/rc/g' | sed 's/[_\\/]/-/g')",
     "release": "standard-version",
@@ -28,12 +29,6 @@
     "url": "https://github.com/jurijzahn8019/action-is-issue-on-board/issues"
   },
   "homepage": "https://github.com/jurijzahn8019/action-is-issue-on-board#readme",
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "npm run precommit"
-    }
-  },
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^4.0.0",
