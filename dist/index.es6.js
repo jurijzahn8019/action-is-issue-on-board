@@ -19058,4 +19058,4 @@ async function run() {
 
 var index = run();
 
-export default index;
+export { index as default };
