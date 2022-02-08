@@ -134,6 +134,6 @@ export async function run(): Promise<void> {
     }
   } catch (e) {
     dbg("Failed:", e);
-    setFailed(e.message);
+    setFailed((e as Error).message);
   }
 }
