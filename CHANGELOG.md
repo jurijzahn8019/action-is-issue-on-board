@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.48](https://github.com/jurijzahn8019/action-is-issue-on-board/compare/v0.0.47...v0.0.48) (2022-02-21)
+
 ### [0.0.47](https://github.com/jurijzahn8019/action-is-issue-on-board/compare/v0.0.46...v0.0.47) (2022-02-14)
 
 ### [0.0.46](https://github.com/jurijzahn8019/action-is-issue-on-board/compare/v0.0.45...v0.0.46) (2022-02-07)
