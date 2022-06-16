@@ -36,5 +36,5 @@ outputs:
   columnId: 
     description: graphql id of the column where the card with the issue is located
 runs:
-  using: "node12"
-  main: "dist/index.cjs.js"
+  using: node16
+  main: dist/index.js
